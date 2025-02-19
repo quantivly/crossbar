@@ -1,7 +1,4 @@
-# this build argument must be defined _before_ FROM, so the value is available in FROM.
-# however, CROSSBAR_ARCH will _not_ be available further down the line because of this ordering!
-ARG CROSSBAR_ARCH=amd64
-FROM ${CROSSBAR_ARCH}/python:3.9-slim
+FROM python:3.7-slim
 
 # these build arguments should be defined _after_ FROM, so the values are available later on
 ARG CROSSBAR_BUILD_ID
@@ -9,28 +6,24 @@ ARG CROSSBAR_BUILD_DATE
 ARG CROSSBAR_VCS_REF
 ARG CROSSBAR_VERSION
 
-# while these are defined, and we copy over to env vars (available in container at run-time)
-ENV CROSSBAR_BUILD_ID $CROSSBAR_BUILD_ID
-ENV CROSSBAR_BUILD_DATE $CROSSBAR_BUILD_DATE
-ENV CROSSBAR_VCS_REF $CROSSBAR_VCS_REF
-ENV CROSSBAR_VERSION $CROSSBAR_VERSION
-
-# # we bindly copy over qemu deps for all archs regardless of arch
-# COPY --from=qemu /usr/bin/qemu-aarch64-static /usr/bin/
-# COPY --from=qemuarm /usr/bin/qemu-arm-static /usr/bin/
+# Metadata labeling
+LABEL org.label-schema.build-date=$CROSSBAR_BUILD_DATE \
+      org.label-schema.name="Crossbar.io Starter Template" \
+      org.label-schema.description="Quickstart template for application development with Crossbar.io" \
+      org.label-schema.url="http://crossbar.io" \
+      org.label-schema.vcs-ref=$CROSSBAR_VCS_REF \
+      org.label-schema.vcs-url="https://github.com/crossbario/crossbar" \
+      org.label-schema.vendor="The Crossbar.io Project" \
+      org.label-schema.version=$CROSSBAR_VERSION \
+      org.label-schema.schema-version="1.0"
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
+# Application home
+ENV HOME /node
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONUNBUFFERED 1
-
-# # ensure local pypy is preferred over distribution pypy
-# ENV PATH /opt/pypy/bin:$PATH
-
-# cross-compatibility with CPython
-# RUN ln -s /opt/pypy/bin/pypy3 /opt/pypy/bin/python3
-# RUN ln -s /opt/pypy/bin/pypy3 /opt/pypy/bin/python
 
 # Use Bash (yes, we want bash for both building the image, and later inside containers)
 # https://github.com/moby/moby/issues/7281#issuecomment-389440503
@@ -38,53 +31,20 @@ SHELL ["/bin/bash", "-c"]
 
 RUN    apt-get update \
     && apt-get install -y --no-install-recommends \
-               autoconf \
-               automake \
-               libtool \
-               nasm \
                ca-certificates \
-               cmake \
-               procps \
-               iputils-ping \
-               net-tools \
-               htop \
-               curl \
                expat \
-               git \
                build-essential \
                libssl-dev \
                libffi-dev \
                libunwind-dev \
-               libreadline-dev \
-               zlib1g-dev \
-               libbz2-dev \
-               libsqlite3-dev \
-               libncurses5-dev \
                libsnappy-dev \
-               libcairo2 \
-               libcairo2-dev \
-               libgirepository1.0-dev \
+               libbz2-dev \
     && rm -rf ~/.cache \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pkg-config --print-errors --exists cairo>=1.15.10 && \
-    pkg-config --variable pc_path pkg-config && \
-    pkg-config --cflags cairo
-
-# Install latest pip
-RUN curl -sSL -o get-pip.py https://bootstrap.pypa.io/get-pip.py && \
-    python3 get-pip.py && \
-    pip --version && \
-    rm -f get-pip.py
-
-# install Rust: don't bother with old distro rust (pun), use the source my jedi
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH /root/.cargo/bin:${PATH}
-RUN rustc --version
-
 # Copy in requirements and install them
-COPY requirements.txt /tmp/crossbar/
-RUN pip install -r /tmp/crossbar/requirements.txt
+# COPY requirements-min.txt /tmp/crossbar/
+# RUN pip install -r /tmp/crossbar/requirements-min.txt
 
 # Copy in source code and install it as a package
 COPY . /tmp/crossbar/
@@ -92,7 +52,6 @@ RUN pip install /tmp/crossbar
 
 # Check versions of CLI
 RUN crossbar version
-# RUN xbrnetwork version
 
 ## SETUP RUNTIME ENVIRONMENT #############################################################
 
@@ -113,5 +72,5 @@ WORKDIR /node
 USER crossbar
 EXPOSE 8080 8000
 
-ENTRYPOINT ["/usr/local/bin/crossbar"]
-CMD ["start", "--cbdir", "/node/.crossbar", "--loglevel", "info"]
+# entrypoint for the Docker image is the Crossbar.io executable
+ENTRYPOINT ["crossbar", "start", "--cbdir", "/node/.crossbar"]
