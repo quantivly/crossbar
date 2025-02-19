@@ -88,9 +88,13 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH /root/.cargo/bin:${PATH}
 RUN rustc --version
 
+# Copy in requirements and install them
+COPY requirements.txt /tmp/crossbar/
+RUN pip install -r /tmp/crossbar/requirements.txt
+
 # Copy in source code and install it as a package
 COPY . /tmp/crossbar/
-RUN ls -al /tmp/crossbar/ && pip install /tmp/crossbar
+RUN pip install /tmp/crossbar
 
 # Check versions of CLI
 RUN crossbar version
