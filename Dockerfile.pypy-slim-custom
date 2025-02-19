@@ -42,10 +42,6 @@ RUN    apt-get update \
     && rm -rf ~/.cache \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy in requirements and install them
-# COPY requirements-min.txt /tmp/crossbar/
-# RUN pip install -r /tmp/crossbar/requirements-min.txt
-
 # Copy in source code and install it as a package
 COPY . /tmp/crossbar/
 RUN pip install /tmp/crossbar
