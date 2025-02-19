@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 source ./versions.sh
 
 time docker build \
@@ -7,6 +9,6 @@ time docker build \
 	--build-arg CROSSBAR_VCS_REF=${CROSSBAR_VCS_REF} \
 	--build-arg CROSSBAR_VERSION=${CROSSBAR_VERSION} \
 	-t quantivly/crossbar:${CROSSBAR_VERSION} \
-	-f Dockerfile.pypy-slim-custom .
+	-f Dockerfile.quantivly-custom .
 
-docker images crossbario/crossbar
+docker images quantivly/crossbar
