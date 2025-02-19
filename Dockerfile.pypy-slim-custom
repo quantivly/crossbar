@@ -25,8 +25,8 @@ ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 ENV PYTHONUNBUFFERED 1
 
-# ensure local pypy is preferred over distribution pypy
-ENV PATH /opt/pypy/bin:$PATH
+# # ensure local pypy is preferred over distribution pypy
+# ENV PATH /opt/pypy/bin:$PATH
 
 # cross-compatibility with CPython
 # RUN ln -s /opt/pypy/bin/pypy3 /opt/pypy/bin/python3
