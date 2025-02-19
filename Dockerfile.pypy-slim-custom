@@ -1,10 +1,6 @@
 # this build argument must be defined _before_ FROM, so the value is available in FROM.
 # however, CROSSBAR_ARCH will _not_ be available further down the line because of this ordering!
 ARG CROSSBAR_ARCH=amd64
-
-FROM multiarch/qemu-user-static:x86_64-aarch64 as qemu
-FROM multiarch/qemu-user-static:x86_64-arm as qemuarm
-
 FROM ${CROSSBAR_ARCH}/python:3.9-slim
 
 # these build arguments should be defined _after_ FROM, so the values are available later on
@@ -19,9 +15,9 @@ ENV CROSSBAR_BUILD_DATE $CROSSBAR_BUILD_DATE
 ENV CROSSBAR_VCS_REF $CROSSBAR_VCS_REF
 ENV CROSSBAR_VERSION $CROSSBAR_VERSION
 
-# we bindly copy over qemu deps for all archs regardless of arch
-COPY --from=qemu /usr/bin/qemu-aarch64-static /usr/bin/
-COPY --from=qemuarm /usr/bin/qemu-arm-static /usr/bin/
+# # we bindly copy over qemu deps for all archs regardless of arch
+# COPY --from=qemu /usr/bin/qemu-aarch64-static /usr/bin/
+# COPY --from=qemuarm /usr/bin/qemu-arm-static /usr/bin/
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
