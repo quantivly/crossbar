@@ -19,11 +19,11 @@ LABEL org.label-schema.build-date=$CROSSBAR_BUILD_DATE \
 
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
-ENV LANG C.UTF-8
+ENV LANG=C.UTF-8
 # Application home
-ENV HOME /node
-ENV DEBIAN_FRONTEND noninteractive
-ENV PYTHONUNBUFFERED 1
+ENV HOME=/node
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
 
 # Use Bash (yes, we want bash for both building the image, and later inside containers)
 # https://github.com/moby/moby/issues/7281#issuecomment-389440503
