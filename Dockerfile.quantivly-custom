@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM python:3.8-slim
 
 # these build arguments should be defined _after_ FROM, so the values are available later on
 ARG CROSSBAR_BUILD_ID
@@ -41,6 +41,8 @@ RUN    apt-get update \
                libbz2-dev \
     && rm -rf ~/.cache \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade setuptools
 
 # Copy in source code and install it as a package
 COPY . /app/crossbar/
