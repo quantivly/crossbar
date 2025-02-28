@@ -7,7 +7,7 @@
 
 import os
 from os import environ
-from os.path import join, abspath, isabs, exists
+from os.path import join, abspath, isabs
 
 from twisted.internet import defer
 from twisted.internet._sslverify import OpenSSLCertificateAuthorities
@@ -22,9 +22,7 @@ from twisted.internet.endpoints import TCP4ServerEndpoint, \
     UNIXClientEndpoint, \
     serverFromString,   \
     clientFromString
-from twisted.internet.interfaces import IStreamServerEndpoint
 from twisted.python.filepath import FilePath
-from zope.interface import implementer
 
 from crossbar._util import get_free_tcp_port, first_free_tcp_port
 from crossbar.common.twisted.sharedport import CustomTCPPort, CustomTCPTLSPort
