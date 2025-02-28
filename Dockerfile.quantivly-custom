@@ -24,6 +24,7 @@ ENV LANG=C.UTF-8
 ENV HOME=/node
 ENV DEBIAN_FRONTEND=noninteractive
 ENV PYTHONUNBUFFERED=1
+ENV PATH="${PATH}:/node/.local/bin"
 
 # Use Bash (yes, we want bash for both building the image, and later inside containers)
 # https://github.com/moby/moby/issues/7281#issuecomment-389440503
