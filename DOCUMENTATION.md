@@ -49,7 +49,6 @@ A custom Docker setup using Python `3.8-slim` as the base image with:
 ### 5. Additional Changes
 
 - Modified vmprof dependency to work only on compatible architectures
-- Switched from open-ended requirements to pinned requirements in setup.py
 
 ## Maintenance Guide
 
