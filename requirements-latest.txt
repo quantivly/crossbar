@@ -26,7 +26,7 @@ humanize>=4.4.0
 # FIXME: twisted/http2 needs <6.0.0 => hyperframe>=6.0.1
 hyperframe>=5.2.0,<6.0.0
 # FIXME: idna>=3.4
-idna<2.6,>=2.5
+idna>=3.7
 importlib-resources>=5.10.2
 incremental>=22.10.0
 iso8601>=1.1.0
@@ -72,7 +72,6 @@ twisted[tls,conch,http2,osx_platform]>=22.10.0; sys_platform == 'darwin'
 twisted[tls,conch,http2,windows_platform]>=22.10.0; sys_platform == 'win32'
 twisted[tls,conch,http2]>=22.10.0; sys_platform != 'darwin' and sys_platform != 'win32'
 txaio @ git+https://github.com/crossbario/txaio.git@master#egg=txaio
-txtorcon>=22.0.0
 u-msgpack-python>=2.7.2
 ujson>=5.7.0
 urllib3>=1.26.14,<1.27
