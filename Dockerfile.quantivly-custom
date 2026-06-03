@@ -44,9 +44,14 @@ RUN    apt-get update \
     && rm -rf ~/.cache \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy in source code and install it as a package
+# Copy in source code and install it as a package.
+# Install the frozen, known-good dependency set first and then the package
+# itself without re-resolving: the floating ranges in requirements-latest.txt
+# (used by setup.py) no longer resolve as newer releases of transitive
+# dependencies (autobahn, eth-account, ...) drift away from crossbar 23.1.2.
 COPY . /app/crossbar/
-RUN pip install /app/crossbar
+RUN pip install -r /app/crossbar/requirements-pinned.txt \
+    && pip install --no-deps /app/crossbar
 
 # Check versions of CLI
 RUN crossbar version
